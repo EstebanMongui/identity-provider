@@ -1,10 +1,50 @@
+import type { SellerInput } from '../../models/user/Seller'
+import { SellerUseCase } from '../../rules/registerSeller'
+import { SellerService } from '../../services/seller/seller'
+
+const data = {
+  email: 'testcompany@mail.com',
+  nit: '45686734',
+  password: 'Company_786_DummyPass',
+  companyName: 'Test Company 1',
+}
+
 describe('Users registration', () => {
   describe('registration data is wrong', () => {
+    const service = new SellerService()
+    const seller = new SellerUseCase(service)
+
     describe('[email] is wrong', () => {
-      xit('throw error when [email] is null', () => {})
-      xit("throw error when [email] doesn't have a valid format", () => {})
-      xit('throw error when [email] already exists, it must be unique', () => {})
-      xit('throw error when [email] is not long enough', () => {})
+      it('throw error when [email] is null', async () => {
+        const _data: SellerInput = { ...data }
+        const error = `email is a required value`
+
+        delete _data.email
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+
+      it("throw error when [email] doesn't have a valid format", async () => {
+        const _data: SellerInput = { ...data, email: 'fakeEmail.test' }
+
+        const error = `email has a wrong format`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      xit('throw error when [email] already exists, it must be unique', async () => {
+        const _data: SellerInput = { ...data, email: 'existent@email.com' }
+
+        const error = `email ${_data.email} already exists`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it('throw error when [email] is not long enough', async () => {
+        const _data: SellerInput = { ...data, email: 'e@m.co' }
+        const minimum = '8'
+        const error = `email must have at less ${minimum} characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
     })
 
     describe('[NIT] is wrong', () => {
