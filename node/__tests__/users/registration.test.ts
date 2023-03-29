@@ -151,7 +151,15 @@ describe('Users registration', () => {
   })
 
   describe('registration data is valid, but registration process fails', () => {
-    xit('returns an internal server error', () => {})
+    const service = new SellerService()
+    const seller = new SellerUseCase(service)
+
+    xit('returns an internal server error', async () => {
+      const _data: SellerInput = { ...data }
+      const error = `Internal server error`
+
+      await expect(seller.create(_data)).rejects.toThrow(error)
+    })
   })
 
   describe('registion data is valid and process is successful', () => {
