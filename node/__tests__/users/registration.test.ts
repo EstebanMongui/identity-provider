@@ -163,6 +163,17 @@ describe('Users registration', () => {
   })
 
   describe('registion data is valid and process is successful', () => {
-    xit('returns a sucess message', () => {})
+    const service = new SellerService()
+    const seller = new SellerUseCase(service)
+
+    xit('returns a sucess message', async () => {
+      const _data: SellerInput = { ...data }
+      const response = {
+        message: `Seller has been created successfully`,
+        id: 'generated id',
+      }
+
+      expect(await seller.create(_data)).toBe(response)
+    })
   })
 })
