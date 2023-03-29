@@ -79,11 +79,50 @@ describe('Users registration', () => {
     })
 
     describe('[password] is wrong', () => {
-      xit('throw error when [passwor] is null', () => {})
-      xit("throw error when [password] doesn't have at less 3 numbers", () => {})
-      xit("throw error when [password] doesn't have at less 3 capital letters", () => {})
-      xit("throw error when [password] doesn't have at less 2 non-alphanumeric characters", () => {})
-      xit('throw error when [password] is not long enough, it must have at less 12 characters', () => {})
+      it('throw error when [passwor] is null', async () => {
+        const _data: SellerInput = { ...data }
+        const error = `password is a required value`
+
+        delete _data.password
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it("throw error when [password] doesn't have at less 3 numbers", async () => {
+        const _data: SellerInput = { ...data, password: 'Company_76_DummyP' }
+        const minNumbers = 3
+        const error = `password must have at less ${minNumbers} numeric characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it("throw error when [password] doesn't have at less 3 capital letters", async () => {
+        const _data: SellerInput = {
+          ...data,
+          password: 'Company_786_Dummypasword',
+        }
+
+        const minCapitalLetters = 3
+        const error = `password must have at less ${minCapitalLetters} capitalized letters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it("throw error when [password] doesn't have at less 2 non-alphanumeric characters", async () => {
+        const _data: SellerInput = {
+          ...data,
+          password: 'Company_789DummyPassword',
+        }
+
+        const minNonAlphaNumeric = 2
+        const error = `password must have at less ${minNonAlphaNumeric} non-alphanumeric characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it('throw error when [password] is not long enough, it must have at less 12 characters', async () => {
+        const _data: SellerInput = { ...data, password: "Don'tHS123_" }
+        const minLength = 12
+        const error = `password must have at less ${minLength} characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
     })
 
     describe('[companyName] is wrong, but other inputs are valid', () => {
