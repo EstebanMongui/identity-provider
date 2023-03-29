@@ -48,10 +48,34 @@ describe('Users registration', () => {
     })
 
     describe('[NIT] is wrong', () => {
-      xit('throw error when [NIT] is null', () => {})
-      xit('throw error when [NIT] has non-alphanumeric characters', () => {})
-      xit('throw error when [NIT] already exists, it must be unique', () => {})
-      xit('throw error when [NIT] is not long enough', () => {})
+      it('throw error when [NIT] is null', async () => {
+        const _data: SellerInput = { ...data }
+        const error = `nit is a required value`
+
+        delete _data.nit
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it('throw error when [NIT] has non-numeric characters', async () => {
+        const _data: SellerInput = { ...data, nit: '2314.?34' }
+        const error = `nit can not contain special characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      xit('throw error when [NIT] already exists, it must be unique', async () => {
+        const _data: SellerInput = data
+
+        const error = `nit ${_data.nit} already exists`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it('throw error when [NIT] is not long enough', async () => {
+        const _data: SellerInput = { ...data, nit: '1452' }
+        const minimum = 8
+        const error = `nit must have at less ${minimum} characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
     })
 
     describe('[password] is wrong', () => {
