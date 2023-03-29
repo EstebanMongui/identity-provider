@@ -126,9 +126,27 @@ describe('Users registration', () => {
     })
 
     describe('[companyName] is wrong, but other inputs are valid', () => {
-      xit('throw error when [companyName] is null', () => {})
-      xit("throw error when [companyName] has non-alphanumeric characters, exept for the 'space' character", () => {})
-      xit('throw error when [companyName] is not long enough, it must have at less 8 characters', () => {})
+      it('throw error when [companyName] is null', async () => {
+        const _data: SellerInput = { ...data }
+        const error = `companyName is a required value`
+
+        delete _data.companyName
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it("throw error when [companyName] has non-alphanumeric characters, exept for the 'space' character", async () => {
+        const _data: SellerInput = { ...data, companyName: 'Company?.Name' }
+        const error = `companyName only must contain alphanumeric characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
+      it('throw error when [companyName] is not long enough, it must have at less 8 characters', async () => {
+        const _data: SellerInput = { ...data, companyName: 'company' }
+        const minLength = 8
+        const error = `companyName must have at less ${minLength} characters`
+
+        await expect(seller.create(_data)).rejects.toThrow(error)
+      })
     })
   })
 
