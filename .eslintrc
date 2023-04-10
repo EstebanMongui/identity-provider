@@ -5,7 +5,7 @@
     "node": true
   },
   "rules": {
-    "jest/no-test-prefixes":"off",
-    "jest/no-disabled-tests":"off"
+    "jest/no-disabled-tests": "off",
+    "jest/no-test-prefixes": "off"
   }
 }
