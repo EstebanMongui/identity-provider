@@ -29,13 +29,14 @@ export const nitValidation = (val: string, ctx: ZodContext) => {
 export const companyNameValidation = (val: string, ctx: ZodContext) => {
   if (!val) return undefined
 
-  const regex = /[^a-zA-Z\d\n]/g
+  const regex = /[^\w\n\s_]/g
 
-  val.match(regex)?.length &&
-    ctx.addIssue({
+  if (val.match(regex)?.length) {
+    return ctx.addIssue({
       code: 'custom',
       message: `companyName only must contain alphanumeric characters`,
     })
+  }
 }
 
 export const passwordValidation = (val: string, ctx: ZodContext): void => {

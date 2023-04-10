@@ -1,13 +1,13 @@
 import { object, string, ZodError } from 'zod'
-
-import type { SellerInput } from '../../models/user/Seller'
-import type { SellerService as SellerInterface } from './types'
+import type { SellerInput } from 'models/user/Seller'
 import {
   nitValidation,
   passwordValidation,
   companyNameValidation,
-} from '../../helpers/dataValidators'
-import { parseErrorMessage } from '../../helpers/parseError'
+} from 'helpers/dataValidators'
+import { parseErrorMessage } from 'helpers/parseError'
+
+import type { SellerService as SellerInterface } from './types'
 
 const SellerSchema = object({
   email: string().email().min(8).max(32),
@@ -17,10 +17,27 @@ const SellerSchema = object({
 })
 
 export class SellerService implements SellerInterface {
+  constructor(private client: unknown) {}
+
   public async create(data: SellerInput) {
     try {
       if (!data) return 'Data is required'
-      await SellerSchema.parseAsync(data)
+
+      const parsedData = await SellerSchema.parseAsync(data)
+
+      const { nit, email, companyName } = parsedData
+      const documentId = `S-${nit}`
+
+      const documentStructure = {
+        dataEntity: 'idP-users',
+        fields: {
+          nit,
+          email,
+          companyName,
+          id: documentId,
+        },
+        schemma: 'sellers',
+      }
 
       return 'created'
     } catch (error) {

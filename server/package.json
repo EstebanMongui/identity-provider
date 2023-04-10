@@ -1,0 +1,9 @@
+{
+  "extends": "../package.json",
+  "type": "module",
+  "dependencies": {
+    "koa": "^2.14.1"
+  },
+  "devDependencies": {},
+  "scripts": {}
+}
